@@ -1,20 +1,24 @@
 package org.weather.model;
 
 import jakarta.persistence.*;
-import net.bytebuddy.description.field.FieldDescription;
+import org.weather.model.key.StateRecordId;
 
 @Table(name = "\"StateRecord\"")
 @Entity
 public class StateRecord {
-    @Id
-    @ManyToOne
-    @JoinColumn(name = "state_id")
-    public State state;
+    @EmbeddedId
+    public StateRecordId stateRecordId;
 
-    @Id
-    @ManyToOne
+    @MapsId("state_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "state_id")
+    private State state;
+
+    @MapsId("year")
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "year")
-    public Year year;
+    private Year year;
+
 
     @Column(name="maximum_temperature",nullable = true)
     public Float maximum_temperature;

@@ -2,21 +2,23 @@ package org.weather.model;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.*;
-
-import java.util.Set;
+import org.weather.model.key.CityRecordId;
 
 @Table(name = "\"CityRecord\"")
 @Entity
 public class CityRecord extends PanacheEntityBase {
-    @Id
-    @ManyToOne
-    @JoinColumn(name = "city_id")
-    public City city;
+    @EmbeddedId
+    public CityRecordId cityRecordId;
 
-    @Id
-    @ManyToOne
+    @MapsId("city_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "city_id")
+    private City city;
+
+    @MapsId("year")
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "year")
-    public Year year;
+    private Year year;
 
     @Column(name="maximum_temperature",nullable = true)
     public Float maximum_temperature;
@@ -26,5 +28,8 @@ public class CityRecord extends PanacheEntityBase {
 
     @Column(name="average_temperature",nullable = true)
     public Float average_temperature;
+
+
+
 
 }

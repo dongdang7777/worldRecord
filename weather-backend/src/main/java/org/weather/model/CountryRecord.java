@@ -1,24 +1,24 @@
 package org.weather.model;
 
-import io.quarkus.hibernate.orm.panache.Panache;
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
-
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.*;
-
+import org.weather.model.key.CountryRecordId;
 
 @Table(name = "\"CountryRecord\"")
 @Entity
 public class CountryRecord extends PanacheEntityBase {
-    @Id
-    @ManyToOne
-    @JoinColumn(name = "country_id")
-    public Country country;
+    @EmbeddedId
+    public CountryRecordId countryRecordId;
 
-    @Id
-    @ManyToOne
+    @MapsId("country_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "country_id")
+    private Country country;
+
+    @MapsId("year")
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "year")
-    public Year year;
+    private Year year;
 
     @Column(name="maximum_temperature",nullable = true)
     public Float maximum_temperature;
